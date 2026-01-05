@@ -16,18 +16,18 @@ import { generateDefaultName } from "@/lib/qr-utils";
 import { toast } from "@/hooks/use-toast";
 
 const tabs = [
-  { id: "url", label: "URL", icon: Link },
   { id: "text", label: "Text", icon: FileText },
+  { id: "url", label: "URL", icon: Link },
   { id: "email", label: "Email", icon: Mail },
   { id: "phone", label: "Phone", icon: Phone },
   { id: "vcard", label: "Contact", icon: User },
   { id: "history", label: "History", icon: History },
 ] as const;
 
-type QRType = "url" | "text" | "email" | "phone" | "vcard";
+type QRType = "text" | "url" | "email" | "phone" | "vcard";
 
 const QrPage = () => {
-  const [activeTab, setActiveTab] = useState<string>("url");
+  const [activeTab, setActiveTab] = useState<string>("text");
   const [qrData, setQrData] = useState("");
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
@@ -93,11 +93,11 @@ const QrPage = () => {
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Form Section */}
             <Card className="p-6 animate-fade-in">
-              <TabsContent value="url" className="m-0">
-                <UrlForm onDataChange={setQrData} />
-              </TabsContent>
               <TabsContent value="text" className="m-0">
                 <TextForm onDataChange={setQrData} />
+              </TabsContent>
+              <TabsContent value="url" className="m-0">
+                <UrlForm onDataChange={setQrData} />
               </TabsContent>
               <TabsContent value="email" className="m-0">
                 <EmailForm onDataChange={setQrData} />
