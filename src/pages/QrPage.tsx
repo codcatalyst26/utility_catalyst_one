@@ -8,12 +8,10 @@ import { PhoneForm } from "@/components/qr/forms/PhoneForm";
 import { VCardForm } from "@/components/qr/forms/VCardForm";
 import { HistoryPanel } from "@/components/qr/HistoryPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Link, FileText, Mail, Phone, User, History, Save } from "lucide-react";
+import { Link, FileText, Mail, Phone, User, History } from "lucide-react";
 import { useHistory, type QRHistoryItem } from "@/contexts/HistoryContext";
-import { generateDefaultName } from "@/lib/qr-utils";
-import { toast } from "@/hooks/use-toast";
+import { SocialItem } from "@/config/socials";
 
 const tabs = [
   { id: "text", label: "Text", icon: FileText },
@@ -24,8 +22,6 @@ const tabs = [
   { id: "history", label: "History", icon: History },
 ] as const;
 
-type QRType = "text" | "url" | "email" | "phone" | "vcard";
-
 const QrPage = () => {
   const [activeTab, setActiveTab] = useState<string>("text");
   const [qrData, setQrData] = useState("");
@@ -33,26 +29,6 @@ const QrPage = () => {
   const [bgColor, setBgColor] = useState("#FFFFFF");
   const [logoUrl, setLogoUrl] = useState("");
   const { addToHistory } = useHistory();
-
-  const handleSaveToHistory = () => {
-    if (!qrData) {
-      toast({
-        title: "Nothing to save",
-        description: "Generate a QR code first",
-        variant: "destructive",
-      });
-      return;
-    }
-    addToHistory({
-      name: generateDefaultName(activeTab as QRType, qrData),
-      type: activeTab as QRType,
-      data: qrData,
-      fgColor,
-      bgColor,
-      logoUrl: logoUrl || undefined,
-    });
-    toast({ title: "Saved!", description: "QR code added to history" });
-  };
 
   const handleSelectHistoryItem = (item: QRHistoryItem) => {
     setActiveTab(item.type);
@@ -67,6 +43,11 @@ const QrPage = () => {
     if (value !== "history") {
       setQrData("");
     }
+  };
+  const handleSocialSelect = (social: SocialItem) => {
+    // setActiveTab("url");
+    setQrData(social.url);
+    setLogoUrl(social.logo);
   };
 
   return (
@@ -134,13 +115,10 @@ const QrPage = () => {
                   fgColor={fgColor}
                   bgColor={bgColor}
                   logoUrl={logoUrl}
+                  onSocialSelect={handleSocialSelect}
+                  qrData={qrData}
+                  activeTab={activeTab}
                 />
-                {qrData && (
-                  <Button onClick={handleSaveToHistory} className="mt-6 gap-2">
-                    <Save className="h-4 w-4" />
-                    Save to History
-                  </Button>
-                )}
               </Card>
             )}
           </div>
