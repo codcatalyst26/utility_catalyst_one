@@ -1,42 +1,46 @@
-import React, { useState } from 'react';
-import { Phone } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useState, useEffect } from "react";
+import { Phone } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { phoneSchema, type PhoneInput } from '@/lib/validation';
-import { formatPhoneData, countryCodes } from '@/lib/qr-utils';
+} from "@/components/ui/select";
+import { phoneSchema, type PhoneInput } from "@/lib/validation";
+import { formatPhoneData, countryCodes } from "@/lib/qr-utils";
+import { useSessionState } from "@/hooks/useSessionState";
 
 interface PhoneFormProps {
   onDataChange: (data: string) => void;
 }
 
+const EMPTY_FORM: PhoneInput = {
+  countryCode: "+1",
+  number: "",
+};
+
 export function PhoneForm({ onDataChange }: PhoneFormProps) {
-  const [formData, setFormData] = useState<PhoneInput>({
-    countryCode: '+1',
-    number: '',
-  });
+  const [formData, setFormData] = useSessionState<PhoneInput>(
+    "qr_phone_data",
+    EMPTY_FORM,
+  );
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (field: keyof PhoneInput, value: string) => {
-    const newData = { ...formData, [field]: value };
-    setFormData(newData);
-    
-    if (!newData.number.trim()) {
+  /** 🔹 Re-emit QR data after refresh or restore */
+  useEffect(() => {
+    if (!formData.number.trim()) {
       setErrors({});
-      onDataChange('');
+      onDataChange("");
       return;
     }
 
-    const result = phoneSchema.safeParse(newData);
+    const result = phoneSchema.safeParse(formData);
     if (result.success) {
       setErrors({});
-      onDataChange(formatPhoneData(newData));
+      onDataChange(formatPhoneData(formData));
     } else {
       const newErrors: Record<string, string> = {};
       result.error.errors.forEach((err) => {
@@ -44,8 +48,15 @@ export function PhoneForm({ onDataChange }: PhoneFormProps) {
         newErrors[path] = err.message;
       });
       setErrors(newErrors);
-      onDataChange('');
+      onDataChange("");
     }
+  }, [formData, onDataChange]);
+
+  const handleChange = (field: keyof PhoneInput, value: string) => {
+    setFormData({
+      ...formData,
+      [field]: value,
+    });
   };
 
   return (
@@ -54,13 +65,13 @@ export function PhoneForm({ onDataChange }: PhoneFormProps) {
         <Phone className="h-5 w-5 text-primary" />
         Phone to QR Code
       </div>
-      
+
       <div className="space-y-4">
         <div className="space-y-2">
           <Label>Country Code</Label>
           <Select
             value={formData.countryCode}
-            onValueChange={(value) => handleChange('countryCode', value)}
+            onValueChange={(value) => handleChange("countryCode", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -82,15 +93,19 @@ export function PhoneForm({ onDataChange }: PhoneFormProps) {
             type="tel"
             placeholder="1234567890"
             value={formData.number}
-            onChange={(e) => handleChange('number', e.target.value.replace(/\D/g, ''))}
-            className={errors.number ? 'border-destructive' : ''}
+            onChange={(e) =>
+              handleChange("number", e.target.value.replace(/\D/g, ""))
+            }
+            className={errors.number ? "border-destructive" : ""}
           />
           {errors.number && (
-            <p className="text-sm text-destructive animate-fade-in">{errors.number}</p>
+            <p className="text-sm text-destructive animate-fade-in">
+              {errors.number}
+            </p>
           )}
         </div>
       </div>
-      
+
       <p className="text-sm text-muted-foreground">
         Generates a tel: QR code that initiates a phone call
       </p>

@@ -1,37 +1,41 @@
-import React, { useState } from 'react';
-import { Mail } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { emailSchema, type EmailInput } from '@/lib/validation';
-import { formatEmailData } from '@/lib/qr-utils';
+import { useState, useEffect } from "react";
+import { Mail } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { emailSchema, type EmailInput } from "@/lib/validation";
+import { formatEmailData } from "@/lib/qr-utils";
+import { useSessionState } from "@/hooks/useSessionState";
 
 interface EmailFormProps {
   onDataChange: (data: string) => void;
 }
 
+const EMPTY_FORM: EmailInput = {
+  email: "",
+  subject: "",
+  body: "",
+};
+
 export function EmailForm({ onDataChange }: EmailFormProps) {
-  const [formData, setFormData] = useState<EmailInput>({
-    email: '',
-    subject: '',
-    body: '',
-  });
+  const [formData, setFormData] = useSessionState<EmailInput>(
+    "qr_email_data",
+    EMPTY_FORM,
+  );
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (field: keyof EmailInput, value: string) => {
-    const newData = { ...formData, [field]: value };
-    setFormData(newData);
-    
-    if (!newData.email.trim()) {
+  /** 🔹 Re-emit QR data after refresh or restore */
+  useEffect(() => {
+    if (!formData.email.trim()) {
       setErrors({});
-      onDataChange('');
+      onDataChange("");
       return;
     }
 
-    const result = emailSchema.safeParse(newData);
+    const result = emailSchema.safeParse(formData);
     if (result.success) {
       setErrors({});
-      onDataChange(formatEmailData(newData));
+      onDataChange(formatEmailData(formData));
     } else {
       const newErrors: Record<string, string> = {};
       result.error.errors.forEach((err) => {
@@ -39,8 +43,15 @@ export function EmailForm({ onDataChange }: EmailFormProps) {
         newErrors[path] = err.message;
       });
       setErrors(newErrors);
-      onDataChange('');
+      onDataChange("");
     }
+  }, [formData, onDataChange]);
+
+  const handleChange = (field: keyof EmailInput, value: string) => {
+    setFormData({
+      ...formData,
+      [field]: value,
+    });
   };
 
   return (
@@ -49,7 +60,7 @@ export function EmailForm({ onDataChange }: EmailFormProps) {
         <Mail className="h-5 w-5 text-primary" />
         Email to QR Code
       </div>
-      
+
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email-input">Email Address *</Label>
@@ -58,11 +69,13 @@ export function EmailForm({ onDataChange }: EmailFormProps) {
             type="email"
             placeholder="recipient@example.com"
             value={formData.email}
-            onChange={(e) => handleChange('email', e.target.value)}
-            className={errors.email ? 'border-destructive' : ''}
+            onChange={(e) => handleChange("email", e.target.value)}
+            className={errors.email ? "border-destructive" : ""}
           />
           {errors.email && (
-            <p className="text-sm text-destructive animate-fade-in">{errors.email}</p>
+            <p className="text-sm text-destructive animate-fade-in">
+              {errors.email}
+            </p>
           )}
         </div>
 
@@ -73,11 +86,13 @@ export function EmailForm({ onDataChange }: EmailFormProps) {
             type="text"
             placeholder="Email subject"
             value={formData.subject}
-            onChange={(e) => handleChange('subject', e.target.value)}
-            className={errors.subject ? 'border-destructive' : ''}
+            onChange={(e) => handleChange("subject", e.target.value)}
+            className={errors.subject ? "border-destructive" : ""}
           />
           {errors.subject && (
-            <p className="text-sm text-destructive animate-fade-in">{errors.subject}</p>
+            <p className="text-sm text-destructive animate-fade-in">
+              {errors.subject}
+            </p>
           )}
         </div>
 
@@ -87,15 +102,19 @@ export function EmailForm({ onDataChange }: EmailFormProps) {
             id="body-input"
             placeholder="Email body text..."
             value={formData.body}
-            onChange={(e) => handleChange('body', e.target.value)}
-            className={`min-h-[80px] ${errors.body ? 'border-destructive' : ''}`}
+            onChange={(e) => handleChange("body", e.target.value)}
+            className={`min-h-[80px] ${
+              errors.body ? "border-destructive" : ""
+            }`}
           />
           {errors.body && (
-            <p className="text-sm text-destructive animate-fade-in">{errors.body}</p>
+            <p className="text-sm text-destructive animate-fade-in">
+              {errors.body}
+            </p>
           )}
         </div>
       </div>
-      
+
       <p className="text-sm text-muted-foreground">
         Generates a mailto: QR code that opens an email client
       </p>

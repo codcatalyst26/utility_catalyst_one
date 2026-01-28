@@ -46,7 +46,7 @@ export function QRCustomizer({
           </Label>
           <div className="flex gap-2">
             <div
-              className="w-10 h-10 rounded-md border border-border cursor-pointer overflow-hidden"
+              className="w-10 h-10 rounded-md cursor-pointer overflow-hidden"
               style={{ backgroundColor: fgColor }}
             >
               <input
@@ -72,7 +72,7 @@ export function QRCustomizer({
           </Label>
           <div className="flex gap-2">
             <div
-              className="w-10 h-10 rounded-md border border-border cursor-pointer overflow-hidden"
+              className="w-10 h-10 rounded-md cursor-pointer overflow-hidden"
               style={{ backgroundColor: bgColor }}
             >
               <input

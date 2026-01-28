@@ -9,13 +9,13 @@ type Props = {
 
 export const SocialCarousel = ({ onSelect, onClear }: Props) => {
   const [index, setIndex] = useState(0);
-  const visibleCount = 3;
+  const visibleCount = 5;
 
   const canScrollUp = index > 0;
   const canScrollDown = index + visibleCount < SOCIALS.length;
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 w-100">
       {/* Up Arrow */}
       <button
         onClick={() => setIndex((i) => Math.max(i - 1, 0))}
