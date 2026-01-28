@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
-import { Download, Copy, Check, Save } from "lucide-react";
+import { Download, Copy, Check, Save, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { SocialItem } from "@/config/socials";
@@ -17,6 +17,7 @@ interface QRPreviewProps {
   logoUrl?: string;
   size?: number;
   onSocialSelect?: (social: SocialItem) => void;
+  onSocialClear?: () => void;
   qrData: string;
   activeTab: string;
 }
@@ -28,6 +29,7 @@ export function QRPreview({
   logoUrl,
   size = 256,
   onSocialSelect,
+  onSocialClear,
   qrData,
   activeTab,
 }: QRPreviewProps) {
@@ -35,6 +37,7 @@ export function QRPreview({
   const [copied, setCopied] = useState(false);
   const { addToHistory } = useHistory();
   const hasData = data.trim().length > 0;
+  const [selectedSocial, setSelectedSocial] = useState<SocialItem | null>(null);
 
   const imageSettings = logoUrl
     ? {
@@ -95,6 +98,38 @@ export function QRPreview({
       toast({
         title: "Copy failed",
         description: "Unable to copy to clipboard",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const shareQRCode = async () => {
+    const canvas = canvasRef.current?.querySelector("canvas");
+    if (!canvas) return;
+
+    try {
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((b) => resolve(b!), "image/png");
+      });
+
+      const file = new File([blob], "qrcode.png", { type: "image/png" });
+
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "QR Code",
+          text: "Here’s a QR code I generated",
+        });
+      } else {
+        await navigator.share({
+          title: "QR Code",
+          text: qrData,
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Share failed",
+        description: "Sharing is not supported on this device",
         variant: "destructive",
       });
     }
@@ -165,11 +200,8 @@ export function QRPreview({
             </div>
           )}
         </div>
-        {hasData && (
-          <>
-            {/* Social Carousel */}
-            {onSocialSelect && <SocialCarousel onSelect={onSocialSelect} />}
-          </>
+        {hasData && onSocialSelect && (
+          <SocialCarousel onSelect={onSocialSelect} onClear={onSocialClear} />
         )}
       </div>
 
@@ -208,6 +240,15 @@ export function QRPreview({
               <Copy className="h-4 w-4" />
             )}
             Copy
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={shareQRCode}
+            className="gap-2"
+          >
+            <Share2 className="h-4 w-4" />
+            Share
           </Button>
           {qrData && (
             <Button

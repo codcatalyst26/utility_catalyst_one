@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { phoneSchema, type PhoneInput } from "@/lib/validation";
 import { formatPhoneData, countryCodes } from "@/lib/qr-utils";
-import { useSessionState } from "@/hooks/useSessionState";
+import { useLocalState } from "@/hooks/useLessionState";
 
 interface PhoneFormProps {
   onDataChange: (data: string) => void;
@@ -23,7 +23,7 @@ const EMPTY_FORM: PhoneInput = {
 };
 
 export function PhoneForm({ onDataChange }: PhoneFormProps) {
-  const [formData, setFormData] = useSessionState<PhoneInput>(
+  const [formData, setFormData] = useLocalState<PhoneInput>(
     "qr_phone_data",
     EMPTY_FORM,
   );

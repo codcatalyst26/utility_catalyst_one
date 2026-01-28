@@ -3,14 +3,14 @@ import { Link as LinkIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { urlSchema } from "@/lib/validation";
-import { useSessionState } from "@/hooks/useSessionState";
+import { useLocalState } from "@/hooks/useLessionState";
 
 interface UrlFormProps {
   onDataChange: (data: string) => void;
 }
 
 export function UrlForm({ onDataChange }: UrlFormProps) {
-  const [url, setUrl] = useSessionState<string>("qr_url_data", "");
+  const [url, setUrl] = useLocalState<string>("qr_url_data", "");
   const [error, setError] = useState("");
 
   /** 🔹 Re-emit QR data on refresh or state restore */

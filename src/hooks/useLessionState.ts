@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-export function useSessionState<T>(key: string, initialValue: T) {
+export function useLocalState<T>(key: string, initialValue: T) {
   const [state, setState] = useState<T>(() => {
     if (typeof window === "undefined") return initialValue;
 
     try {
-      const stored = sessionStorage.getItem(key);
+      const stored = localStorage.getItem(key);
       return stored ? (JSON.parse(stored) as T) : initialValue;
     } catch {
       return initialValue;
@@ -18,9 +18,9 @@ export function useSessionState<T>(key: string, initialValue: T) {
       state === undefined ||
       (typeof state === "string" && !state.trim())
     ) {
-      sessionStorage.removeItem(key);
+      localStorage.removeItem(key);
     } else {
-      sessionStorage.setItem(key, JSON.stringify(state));
+      localStorage.setItem(key, JSON.stringify(state));
     }
   }, [key, state]);
 

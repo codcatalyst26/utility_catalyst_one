@@ -3,14 +3,14 @@ import { FileText } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { textSchema } from "@/lib/validation";
-import { useSessionState } from "@/hooks/useSessionState";
+import { useLocalState } from "@/hooks/useLessionState";
 
 interface TextFormProps {
   onDataChange: (data: string) => void;
 }
 
 export function TextForm({ onDataChange }: TextFormProps) {
-  const [text, setText] = useSessionState<string>("qr_text_data", "");
+  const [text, setText] = useLocalState<string>("qr_text_data", "");
   const [error, setError] = useState("");
 
   /** 🔹 Re-emit QR data on refresh or state restore */

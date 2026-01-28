@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { emailSchema, type EmailInput } from "@/lib/validation";
 import { formatEmailData } from "@/lib/qr-utils";
-import { useSessionState } from "@/hooks/useSessionState";
+import { useLocalState } from "@/hooks/useLessionState";
 
 interface EmailFormProps {
   onDataChange: (data: string) => void;
@@ -18,7 +18,7 @@ const EMPTY_FORM: EmailInput = {
 };
 
 export function EmailForm({ onDataChange }: EmailFormProps) {
-  const [formData, setFormData] = useSessionState<EmailInput>(
+  const [formData, setFormData] = useLocalState<EmailInput>(
     "qr_email_data",
     EMPTY_FORM,
   );

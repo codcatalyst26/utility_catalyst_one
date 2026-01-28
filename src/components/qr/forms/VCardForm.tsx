@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { vcardSchema, type VCardInput } from "@/lib/validation";
 import { formatVCardData } from "@/lib/qr-utils";
-import { useSessionState } from "@/hooks/useSessionState";
+import { useLocalState } from "@/hooks/useLessionState";
 
 interface VCardFormProps {
   onDataChange: (data: string) => void;
@@ -23,7 +23,7 @@ const EMPTY_FORM: VCardInput = {
 };
 
 export function VCardForm({ onDataChange }: VCardFormProps) {
-  const [formData, setFormData] = useSessionState<VCardInput>(
+  const [formData, setFormData] = useLocalState<VCardInput>(
     "qr_vcard_data",
     EMPTY_FORM,
   );

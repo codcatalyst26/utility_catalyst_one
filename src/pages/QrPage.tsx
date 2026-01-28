@@ -28,6 +28,8 @@ const QrPage = () => {
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
   const [logoUrl, setLogoUrl] = useState("");
+  const [qrSource, setQrSource] = useState<"manual" | "social">("manual");
+
   const { addToHistory } = useHistory();
 
   const handleSelectHistoryItem = (item: QRHistoryItem) => {
@@ -44,15 +46,26 @@ const QrPage = () => {
       setQrData("");
     }
   };
+
   const handleSocialSelect = (social: SocialItem) => {
     // setActiveTab("url");
     setQrData(social.url);
     setLogoUrl(social.logo);
+    setQrSource("social");
+  };
+
+  const handleClearSocial = () => {
+    // if (qrSource === "social") {
+    //   setQrData(""); // remove social URL
+    // }
+    setLogoUrl(""); // always remove logo
+    setQrSource("manual");
   };
 
   return (
     <div>
-      <main className="container max-w-6xl mx-auto px-4 py-8">
+      {/* max-w-6xl */}
+      <main className="container mx-auto px-4 py-8">
         <Tabs
           value={activeTab}
           onValueChange={handleTabChange}
@@ -109,15 +122,16 @@ const QrPage = () => {
 
             {/* Preview Section */}
             {activeTab !== "history" && (
-              <Card className="p-6 flex flex-col items-center justify-center animate-fade-in">
+              <Card className="p-6 flex flex-col items-center justify-start animate-fade-in">
                 <QRPreview
                   data={qrData}
                   fgColor={fgColor}
                   bgColor={bgColor}
                   logoUrl={logoUrl}
-                  onSocialSelect={handleSocialSelect}
                   qrData={qrData}
                   activeTab={activeTab}
+                  onSocialSelect={handleSocialSelect}
+                  onSocialClear={handleClearSocial}
                 />
               </Card>
             )}
