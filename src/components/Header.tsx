@@ -42,21 +42,21 @@ const Header = () => {
 
           <nav className="hidden md:flex items-center gap-6">
             <a
-              href="/#qr-codes"
+              href="/"
               className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
             >
               <QrCode className="h-4 w-4" />
               QR Codes
             </a>
             <a
-              href="/#documents"
+              href="/documents"
               className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
             >
               <FileText className="h-4 w-4" />
               Documents
             </a>
             <a
-              href="/#images"
+              href="/images"
               className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
             >
               <ImageIcon className="h-4 w-4" />
@@ -98,6 +98,12 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden border-t py-4 space-y-4">
           <a
+            href="/#qr-codes"
+            className="block py-2 text-sm font-medium hover:text-primary transition-colors"
+          >
+            QR Codes
+          </a>
+          <a
             href="/#documents"
             className="block py-2 text-sm font-medium hover:text-primary transition-colors"
           >
@@ -108,12 +114,6 @@ const Header = () => {
             className="block py-2 text-sm font-medium hover:text-primary transition-colors"
           >
             Images
-          </a>
-          <a
-            href="/#qr-codes"
-            className="block py-2 text-sm font-medium hover:text-primary transition-colors"
-          >
-            QR Codes
           </a>
           <a
             href="/contact"

@@ -12,6 +12,8 @@ import { Card } from "@/components/ui/card";
 import { Link, FileText, Mail, Phone, User, History } from "lucide-react";
 import { useHistory, type QRHistoryItem } from "@/contexts/HistoryContext";
 import { SocialItem } from "@/config/socials";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const tabs = [
   { id: "text", label: "Text", icon: FileText },
@@ -63,7 +65,8 @@ const QrPage = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen gradient-subtle">
+      <Header />
       {/* max-w-6xl */}
       <main className="container mx-auto px-4 py-8">
         <Tabs
@@ -138,6 +141,8 @@ const QrPage = () => {
           </div>
         </Tabs>
       </main>
+
+      <Footer />
     </div>
   );
 };

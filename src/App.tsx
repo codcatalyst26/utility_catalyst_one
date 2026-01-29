@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { HistoryProvider } from "./contexts/HistoryContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import QrPage from "./pages/QrPage";
+import Documents from "./pages/Documents";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +22,8 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/qr" element={<QrPage />} />
+              <Route path="/documents" element={<Documents />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
