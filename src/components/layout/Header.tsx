@@ -18,6 +18,9 @@ const Header = () => {
   const MOBILE_NAV_LINK_BASE =
     "block py-2 px-3 text-sm font-medium rounded-md transition-colors";
 
+  const MOBILE_ICON_BUTTON =
+    "rounded-md hover:bg-muted transition-colors flex items-center justify-center";
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="container mx-auto px-4">
@@ -82,20 +85,25 @@ const Header = () => {
             <ThemeToggle />
           </div>
 
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <div className="flex justify-center items-center">
-                <ThemeToggle />
+          <div className="md:hidden flex items-center gap-2">
+            {/* Theme toggle — independent button */}
+            <div>
+              <ThemeToggle />
+            </div>
+
+            {/* Menu toggle button */}
+            <button
+              className={MOBILE_ICON_BUTTON}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
                 <Menu className="h-6 w-6" />
-              </div>
-            )}
-          </button>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
