@@ -2,7 +2,8 @@
 import { QrCode, FileText, Image, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/Header";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 const Index = () => {
   const features = [
@@ -11,7 +12,7 @@ const Index = () => {
       title: "QR Codes",
       description:
         "Generate beautiful QR codes for text, URLs, emails, phone numbers, and more.",
-      href: "/",
+      href: "/qr",
       active: true,
     },
     {
@@ -111,6 +112,8 @@ const Index = () => {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };

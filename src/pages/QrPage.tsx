@@ -12,8 +12,8 @@ import { Card } from "@/components/ui/card";
 import { Link, FileText, Mail, Phone, User, History } from "lucide-react";
 import { useHistory, type QRHistoryItem } from "@/contexts/HistoryContext";
 import { SocialItem } from "@/config/socials";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 const tabs = [
   { id: "text", label: "Text", icon: FileText },

@@ -10,7 +10,7 @@ import {
   Minimize2,
 } from "lucide-react";
 
-import Header from "@/components/Header";
+import Header from "@/components/layout/Header";
 import WordToPdf from "@/components/document/WordToPdf";
 import PdfToWord from "@/components/document/PdfToWord";
 import ExcelToPdf from "@/components/document/ExcelToPdf";
@@ -19,7 +19,7 @@ import ImageToPdf from "@/components/document/ImageToPdf";
 import PdfSplitter from "@/components/document/PdfSplitter";
 import PdfMerger from "@/components/document/PdfMerger";
 import PdfResizer from "@/components/document/PdfResizer";
-import Footer from "@/components/Footer";
+import Footer from "@/components/layout/Footer";
 
 const tabs = [
   { id: "word-to-pdf", label: "Word to PDF", icon: FileText },
