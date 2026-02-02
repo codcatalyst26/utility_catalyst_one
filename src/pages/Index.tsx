@@ -1,161 +1,121 @@
-import React, { useState } from 'react';
-import { Link, FileText, Mail, Phone, User, History, Save } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { QRPreview } from '@/components/qr/QRPreview';
-import { QRCustomizer } from '@/components/qr/QRCustomizer';
-import { UrlForm } from '@/components/qr/forms/UrlForm';
-import { TextForm } from '@/components/qr/forms/TextForm';
-import { EmailForm } from '@/components/qr/forms/EmailForm';
-import { PhoneForm } from '@/components/qr/forms/PhoneForm';
-import { VCardForm } from '@/components/qr/forms/VCardForm';
-import { HistoryPanel } from '@/components/qr/HistoryPanel';
-import { useHistory, type QRHistoryItem } from '@/contexts/HistoryContext';
-import { generateDefaultName } from '@/lib/qr-utils';
-import { toast } from '@/hooks/use-toast';
+// import Header from "@/components/layout/Header";
+import { QrCode, FileText, Image, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
-type QRType = 'url' | 'text' | 'email' | 'phone' | 'vcard';
-
-const tabs = [
-  { id: 'url', label: 'URL', icon: Link },
-  { id: 'text', label: 'Text', icon: FileText },
-  { id: 'email', label: 'Email', icon: Mail },
-  { id: 'phone', label: 'Phone', icon: Phone },
-  { id: 'vcard', label: 'Contact', icon: User },
-  { id: 'history', label: 'History', icon: History },
-] as const;
-
-export default function Index() {
-  const [activeTab, setActiveTab] = useState<string>('url');
-  const [qrData, setQrData] = useState('');
-  const [fgColor, setFgColor] = useState('#000000');
-  const [bgColor, setBgColor] = useState('#FFFFFF');
-  const [logoUrl, setLogoUrl] = useState('');
-  const { addToHistory } = useHistory();
-
-  const handleSaveToHistory = () => {
-    if (!qrData) {
-      toast({ title: 'Nothing to save', description: 'Generate a QR code first', variant: 'destructive' });
-      return;
-    }
-    addToHistory({
-      name: generateDefaultName(activeTab as QRType, qrData),
-      type: activeTab as QRType,
-      data: qrData,
-      fgColor,
-      bgColor,
-      logoUrl: logoUrl || undefined,
-    });
-    toast({ title: 'Saved!', description: 'QR code added to history' });
-  };
-
-  const handleSelectHistoryItem = (item: QRHistoryItem) => {
-    setActiveTab(item.type);
-    setQrData(item.data);
-    setFgColor(item.fgColor);
-    setBgColor(item.bgColor);
-    setLogoUrl(item.logoUrl || '');
-  };
-
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    if (value !== 'history') {
-      setQrData('');
-    }
-  };
+const Index = () => {
+  const features = [
+    {
+      icon: QrCode,
+      title: "QR Codes",
+      description:
+        "Generate beautiful QR codes for text, URLs, emails, phone numbers, and more.",
+      href: "/qr",
+      active: true,
+    },
+    {
+      icon: FileText,
+      title: "Documents",
+      description:
+        "Convert, edit, merge, split, and resize PDF documents with ease.",
+      href: "/documents",
+    },
+    {
+      icon: Image,
+      title: "Images",
+      description:
+        "Compress, resize, and convert images between different formats.",
+      href: "/images",
+    },
+  ];
 
   return (
-    <div className="min-h-screen gradient-subtle">
-      {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-              <svg className="w-6 h-6 text-primary-foreground" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="3" y="3" width="7" height="7" rx="1" />
-                <rect x="14" y="3" width="7" height="7" rx="1" />
-                <rect x="3" y="14" width="7" height="7" rx="1" />
-                <rect x="14" y="14" width="3" height="3" rx="0.5" />
-                <rect x="18" y="14" width="3" height="3" rx="0.5" />
-                <rect x="14" y="18" width="3" height="3" rx="0.5" />
-                <rect x="18" y="18" width="3" height="3" rx="0.5" />
-              </svg>
+    <div className="min-h-screen bg-background">
+      <Header />
+
+      <main className="container py-16">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium mb-6">
+            <QrCode className="w-4 h-4" />
+            All-in-one productivity tools
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+            Create, Convert, and Edit
+            <br />
+            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              with Ease
+            </span>
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+            Free online tools to generate QR codes, convert documents, and
+            process images. No installation required — everything works in your
+            browser.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button size="lg" className="gradient-primary border-0">
+              Get Started
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+            <Button size="lg" variant="outline">
+              Learn More
+            </Button>
+          </div>
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {features.map((feature) => (
+            <Link
+              key={feature.title}
+              to={feature.href}
+              className="tool-card group cursor-pointer"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <feature.icon className="w-7 h-7 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {feature.description}
+              </p>
+              <span className="inline-flex items-center text-sm font-medium text-primary">
+                Explore
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Stats Section */}
+        <div className="mt-20 p-8 bg-card rounded-2xl shadow-card">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <p className="text-3xl font-bold text-primary">100%</p>
+              <p className="text-sm text-muted-foreground">Free to Use</p>
             </div>
             <div>
-              <h1 className="text-xl font-bold">QR Generator</h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">Create beautiful QR codes instantly</p>
+              <p className="text-3xl font-bold text-primary">No Signup</p>
+              <p className="text-sm text-muted-foreground">Required</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-primary">Instant</p>
+              <p className="text-sm text-muted-foreground">Processing</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-primary">Secure</p>
+              <p className="text-sm text-muted-foreground">Browser-based</p>
             </div>
           </div>
-          <ThemeToggle />
         </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container max-w-6xl mx-auto px-4 py-8">
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-          <TabsList className="grid grid-cols-3 sm:grid-cols-6 gap-1 h-auto p-1 bg-secondary">
-            {tabs.map((tab) => (
-              <TabsTrigger
-                key={tab.id}
-                value={tab.id}
-                className="flex items-center gap-2 py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-              >
-                <tab.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Form Section */}
-            <Card className="p-6 animate-fade-in">
-              <TabsContent value="url" className="m-0"><UrlForm onDataChange={setQrData} /></TabsContent>
-              <TabsContent value="text" className="m-0"><TextForm onDataChange={setQrData} /></TabsContent>
-              <TabsContent value="email" className="m-0"><EmailForm onDataChange={setQrData} /></TabsContent>
-              <TabsContent value="phone" className="m-0"><PhoneForm onDataChange={setQrData} /></TabsContent>
-              <TabsContent value="vcard" className="m-0"><VCardForm onDataChange={setQrData} /></TabsContent>
-              <TabsContent value="history" className="m-0">
-                <HistoryPanel onSelectItem={handleSelectHistoryItem} />
-              </TabsContent>
-
-              {activeTab !== 'history' && (
-                <div className="mt-6 pt-6 border-t border-border">
-                  <QRCustomizer
-                    fgColor={fgColor}
-                    bgColor={bgColor}
-                    logoUrl={logoUrl}
-                    onFgColorChange={setFgColor}
-                    onBgColorChange={setBgColor}
-                    onLogoUrlChange={setLogoUrl}
-                  />
-                </div>
-              )}
-            </Card>
-
-            {/* Preview Section */}
-            {activeTab !== 'history' && (
-              <Card className="p-6 flex flex-col items-center justify-center animate-fade-in">
-                <QRPreview data={qrData} fgColor={fgColor} bgColor={bgColor} logoUrl={logoUrl} />
-                {qrData && (
-                  <Button onClick={handleSaveToHistory} className="mt-6 gap-2">
-                    <Save className="h-4 w-4" />
-                    Save to History
-                  </Button>
-                )}
-              </Card>
-            )}
-          </div>
-        </Tabs>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border mt-auto py-6">
-        <div className="container max-w-6xl mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>Generate QR codes for URLs, text, emails, phone numbers, and contacts.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
-}
+};
+
+export default Index;
